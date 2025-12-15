@@ -6,6 +6,10 @@ from .forms import WargaForm, PengaduanForm
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from .serializers import WargaSerializer, PengaduanSerializer
 from rest_framework import viewsets 
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.filters import SearchFilter, OrderingFilter # <<< IMPOR INI
+from .serializers import WargaSerializer, PengaduanSerializer
+from .models import Warga, Pengaduan
 
 
 
@@ -46,7 +50,7 @@ class WargaDeleteView(DeleteView):
 class PengaduanUpdateView(UpdateView):
     model = Pengaduan
     form_class = PengaduanForm
-    template_name = 'warga/pengaduan_form.html'  # bisa gunakan template form yang sudah ada
+    template_name = 'warga/pengaduan_form.html'  # b    isa gunakan template form yang sudah ada
     success_url = reverse_lazy('pengaduan-list')
 
 class PengaduanDeleteView(DeleteView):
@@ -68,10 +72,21 @@ class WargaViewSet(viewsets.ModelViewSet):
     """
     queryset = Warga.objects.all().order_by('-tanggal_registrasi')
     serializer_class = WargaSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['nama_lengkap', 'nik', 'alamat'] 
+    ordering_fields = ['nama_lengkap', 'tanggal_registrasi']
 
 class PengaduanViewSet(viewsets.ModelViewSet):
     """
     API endpoint CRUD penuh untuk model Pengaduan. 
     """
-    queryset = Pengaduan.objects.all().order_by('-tanggal_lapor') # Atur QuerySet
-    serializer_class = PengaduanSerializer # Gunakan Serializer yang baru dibuat
+    queryset = Pengaduan.objects.all().order_by('-tanggal_lapor') # Urutan default
+    serializer_class = PengaduanSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    # --- TAMBAHKAN KONFIGURASI DI BAWAH INI ---
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['judul', 'deskripsi'] # Mencari berdasarkan Judul atau Deskripsi
+    ordering_fields = ['status', 'tanggal_lapor']
