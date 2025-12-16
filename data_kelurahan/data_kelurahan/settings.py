@@ -37,11 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'warga',
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
-    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -138,5 +138,11 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
+
 CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS =[
+#     "https://www.kelfrontend.com",
+#     "https://localhost:3000",
+#     "https://192.160.100.45",
+# ]
 
